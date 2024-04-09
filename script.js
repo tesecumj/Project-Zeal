@@ -1,6 +1,3 @@
-import firebase from "firebase/app";
-import "firebase/database";
-
 const agentsData = new Map([
     ["456", "Sheyla Morales"],
     ["111", "Mirian Gonzales"],
@@ -155,4 +152,7 @@ function handleExit() {
 }
 
 // Event listeners for button clicks
-document.getElementById("sign-in-btn").addEventListener
+document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
+document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
+document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
+document.getElementById("exit-btn").addEventListener("click", handleExit);
