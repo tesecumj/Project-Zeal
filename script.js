@@ -139,20 +139,3 @@ function handleAgentReady() {
 }
 
 function handleAddReferrals() {
-    const referralsInput = prompt("Enter referral number(s) separated by commas:");
-    if (referralsInput !== null) {
-        const referrals = referralsInput.split(",").map(referral => parseInt(referral.trim()));
-        addReferrals(referrals);
-    }
-}
-
-function handleExit() {
-    updateOutput("Exiting program.");
-    // Add any necessary clean-up logic here
-}
-
-// Event listeners for button clicks
-document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
-document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
-document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
-document.getElementById("exit-btn").addEventListener("click", handleExit);
