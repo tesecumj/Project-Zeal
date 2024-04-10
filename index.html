@@ -17,9 +17,14 @@
         </div>
         <div class="output" id="output"></div>
         <div class="options" id="options" style="display: none;">
-            <button id="sign-in-btn">Agent Sign In</button>
-            <button id="agent-ready-btn">Agent Ready</button>
-            <button id="add-referrals-btn">Add Referral(s)</button>
+            <button id="guidelines-btn">Guidelines</button>
+            <button id="guidelines-ready-btn">Guidelines Ready</button>
+            <button id="add-options-data-btn">Additional Options Data Entries</button>
+            <button id="data-entry-complete-btn">Data Entry Complete</button>
+            <button id="listers-btn">Listers</button>
+            <button id="listing-complete-btn">Listing Complete</button>
+            <button id="downloaders-btn">Downloaders</button>
+            <button id="download-complete-btn">Download Complete</button>
             <button id="exit-btn">Exit</button>
         </div>
     </div>
@@ -44,9 +49,14 @@
                     options.style.display = 'block';
 
                     // Activate event listeners for option buttons
-                    document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
-                    document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
-                    document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
+                    document.getElementById("guidelines-btn").addEventListener("click", handleGuidelines);
+                    document.getElementById("guidelines-ready-btn").addEventListener("click", handleGuidelinesReady);
+                    document.getElementById("add-options-data-btn").addEventListener("click", handleAddOptionsData);
+                    document.getElementById("data-entry-complete-btn").addEventListener("click", handleDataEntryComplete);
+                    document.getElementById("listers-btn").addEventListener("click", handleListers);
+                    document.getElementById("listing-complete-btn").addEventListener("click", handleListingComplete);
+                    document.getElementById("downloaders-btn").addEventListener("click", handleDownloaders);
+                    document.getElementById("download-complete-btn").addEventListener("click", handleDownloadComplete);
                     document.getElementById("exit-btn").addEventListener("click", handleExit);
                 } else {
                     // Failed login
@@ -71,33 +81,36 @@
             });
         });
 
-        function handleSignIn() {
-            const agentId = prompt("Enter agent ID:");
-            if (agentId !== null) {
-                signIn(agentId);
-            }
+        function handleGuidelines() {
+            // Add logic for guidelines here
         }
 
-        function handleAgentReady() {
-            const agentId = prompt("Enter agent ID:");
-            if (agentId !== null) {
-                agentReady(agentId);
-            }
+        function handleGuidelinesReady() {
+            // Add logic for guidelines ready here
         }
 
-        function handleAddReferrals() {
-            const referralType = prompt("Enter referral type (RUSH or MANUAL):");
-            if (referralType !== null) {
-                const referralNumbersInput = prompt("Enter referral number(s) separated by commas:");
-                if (referralNumbersInput !== null) {
-                    const referralNumbers = referralNumbersInput.split(",").map(referral => parseInt(referral.trim()));
-                    if (referralType.toUpperCase() === "RUSH") {
-                        addReferrals(referralNumbers, true); // Pass true for rush referrals
-                    } else {
-                        addReferrals(referralNumbers);
-                    }
-                }
-            }
+        function handleAddOptionsData() {
+            // Add logic for additional options data entries here
+        }
+
+        function handleDataEntryComplete() {
+            // Add logic for data entry complete here
+        }
+
+        function handleListers() {
+            // Add logic for listers here
+        }
+
+        function handleListingComplete() {
+            // Add logic for listing complete here
+        }
+
+        function handleDownloaders() {
+            // Add logic for downloaders here
+        }
+
+        function handleDownloadComplete() {
+            // Add logic for download complete here
         }
 
         function handleExit() {
