@@ -47,10 +47,19 @@
                     errorMessage.textContent = 'Invalid username or password';
                 }
             });
+
+            // Event listener for "Enter" keypress
+            document.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    const activeElement = document.activeElement;
+                    if (activeElement.tagName === 'BUTTON') {
+                        activeElement.click();
+                    }
+                }
+            });
         });
 
         // Referral Queue System JavaScript
-
         const agentsData = new Map([
             ["456", "Sheyla Morales"],
             ["111", "Mirian Gonzales"],
