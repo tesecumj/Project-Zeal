@@ -97,3 +97,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function handleSignIn() {
+    const agentId = prompt("Enter agent ID:");
+    if (agentId !== null) {
+        signIn(agentId);
+    }
+}
+
+function handleAgentReady() {
+    const agentId = prompt("Enter agent ID:");
+    if (agentId !== null) {
+        agentReady(agentId);
+    }
+}
+
+function handleAddReferrals() {
+    const referralType = prompt("Enter referral type (RUSH or MANUAL):");
+    if (referralType !== null) {
+        const referralNumbersInput = prompt("Enter referral number(s) separated by commas:");
+        if (referralNumbersInput !== null) {
+            const referralNumbers = referralNumbersInput.split(",").map(referral => parseInt(referral.trim()));
+            if (referralType.toUpperCase() === "RUSH") {
+                addReferrals(referralNumbers, true); // Pass true for rush referrals
+            } else {
+                addReferrals(referralNumbers);
+            }
+        }
+    }
+}
+
+function handleExit() {
+    updateOutput("Exiting program.");
+    // Add any necessary clean-up logic here
+}
