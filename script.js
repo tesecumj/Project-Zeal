@@ -1,4 +1,3 @@
-// Referral Queue System JavaScript
 const agentsData = new Map([
     ["456", "Sheyla Morales"],
     ["111", "Mirian Gonzales"],
@@ -89,8 +88,13 @@ function agentReady(agentId) {
     }
 }
 
-function addReferrals(referralNumbers) {
-    manualReferrals.push(...referralNumbers);
+function addReferrals(referralNumbers, isRush = false) {
+    if (isRush) {
+        // Add rush referrals to the beginning of the queue
+        manualReferrals.unshift(...referralNumbers);
+    } else {
+        manualReferrals.push(...referralNumbers);
+    }
     updateOutput("Referrals added.");
     assignReferral();
 }
@@ -153,10 +157,17 @@ function handleAgentReady() {
 }
 
 function handleAddReferrals() {
-    const referralsInput = prompt("Enter referral number(s) separated by commas:");
-    if (referralsInput !== null) {
-        const referrals = referralsInput.split(",").map(referral => parseInt(referral.trim()));
-        addReferrals(referrals);
+    const referralType = prompt("Enter referral type (RUSH or MANUAL):");
+    if (referralType !== null) {
+        const referralNumbersInput = prompt("Enter referral number(s) separated by commas:");
+        if (referralNumbersInput !== null) {
+            const referralNumbers = referralNumbersInput.split(",").map(referral => parseInt(referral.trim()));
+            if (referralType.toUpperCase() === "RUSH") {
+                addReferrals(referralNumbers, true); // Pass true for rush referrals
+            } else {
+                addReferrals(referralNumbers);
+            }
+        }
     }
 }
 
@@ -196,10 +207,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener for "Enter" keypress
     document.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            const activeElement = document.activeElement;
-            if (activeElement.tagName === 'BUTTON') {
-                activeElement.click();
-            }
-        }
-    });
-});
+            const activeElement = document.activeElement
