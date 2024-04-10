@@ -115,21 +115,26 @@ function updateOutput(message, outputType) {
             outputDiv = document.getElementById("guidelines-output");
             break;
     }
-    
-    const newMessage = document.createElement("div");
-    newMessage.textContent = message;
 
-    // Check if the last message was "No manual referrals available."
-    // If it was, don't add another one
-    if (message !== lastMessage) {
-        outputDiv.appendChild(newMessage);
-        // Add a line break after each message
-        outputDiv.appendChild(document.createElement("br"));
-        // Update lastMessage with the current message
-        lastMessage = message;
+    // Check if outputDiv is null before attempting to append
+    if (outputDiv) {
+        const newMessage = document.createElement("div");
+        newMessage.textContent = message;
+
+        // Check if the last message was "No manual referrals available."
+        // If it was, don't add another one
+        if (message !== lastMessage) {
+            outputDiv.appendChild(newMessage);
+            // Add a line break after each message
+            outputDiv.appendChild(document.createElement("br"));
+            // Update lastMessage with the current message
+            lastMessage = message;
+        } else {
+            // Update lastMessage with the current message even if it's repeated
+            lastMessage = message;
+        }
     } else {
-        // Update lastMessage with the current message even if it's repeated
-        lastMessage = message;
+        console.error("Output element not found:", outputType);
     }
 }
 
@@ -139,7 +144,6 @@ function clearOutput() {
 }
 
 function signIn(agentId) {
-    console.log('Attempting to sign in agent:', agentId);
     if (agents.has(agentId)) {
         const agent = agents.get(agentId);
         if (agent.ready && !agent.busy) {
