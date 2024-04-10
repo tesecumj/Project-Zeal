@@ -1,4 +1,5 @@
 const agentsData = new Map([
+    // Existing agents
     ["456", "Sheyla Morales"],
     ["111", "Mirian Gonzales"],
     ["385", "Brithney Howe"],
@@ -17,7 +18,39 @@ const agentsData = new Map([
     ["635", "Hector Montero"],
     ["624", "Janice Hernandez"],
     ["567", "Jorge Tesecum"],
-    ["626", "Ginelly Rivera"]
+    ["626", "Ginelly Rivera"],
+    // New listers
+    ["571", "Joeanna Pech"],
+    ["681", "Daja Flowers"],
+    ["514", "Emilia Cunil"],
+    ["774", "Hailey Perez"],
+    ["775", "Emily Sanchez"],
+    ["773", "Vinaya Martinez"],
+    ["776", "Joshua Reyes"],
+    ["382", "Adriel Pech"],
+    ["661", "Jamina Quiroz"],
+    ["647", "Bianka Aranda"],
+    ["421", "Dylan Gentle"],
+    ["414", "Melissa Ferguson"],
+    ["662", "Julianna Moreno"],
+    ["678", "Dania Arana"],
+    ["737", "Kerstie Samos"],
+    ["541", "Marialuz Polanco"],
+    ["649", "Tammy Bacab"],
+    // New data entry agents
+    ["785", "Carlene Jones"],
+    ["769", "Breanna Reyes"],
+    ["768", "Brandy James"],
+    ["766", "Alinie Cruz"],
+    ["786", "Lizannie Patt"],
+    ["770", "Mariangel Santos"],
+    ["771", "Zenelly Guerra"],
+    // New downloaders
+    ["393", "Aura Tzib"],
+    ["395", "Charles Harrison"],
+    ["318", "Edgardo Serrut"],
+    ["454", "Adolfo Medina"],
+    ["042", "Ernesto Orellana"]
 ]);
 
 const agents = new Map();
@@ -25,18 +58,30 @@ const queue = [];
 const manualReferrals = [];
 let lastMessage = ""; // Variable to store the last message
 
-function addAgent(id, name) {
+function addAgent(id, name, category) {
     agents.set(id, {
         id: id,
         name: name,
         ready: false,
         busy: false,
-        referral: null
+        referral: null,
+        category: category // Add category property
     });
 }
 
 agentsData.forEach((name, id) => {
-    addAgent(id, name);
+    // Determine category based on agent ID
+    let category;
+    if (id.startsWith("5")) {
+        category = "Lister";
+    } else if (id.startsWith("7")) {
+        category = "Data Entry";
+    } else if (id.startsWith("3")) {
+        category = "Downloader";
+    } else {
+        category = "Guidelines"; // Assuming guidelines agents have IDs starting with other digits
+    }
+    addAgent(id, name, category);
 });
 
 function assignReferralToAgent(agent) {
