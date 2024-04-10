@@ -47,6 +47,22 @@
                     errorMessage.textContent = 'Invalid username or password';
                 }
             });
+
+            // Event listener for "Enter" keypress on password input
+            passwordInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    if (loginForm.style.display !== 'none') {
+                        // If login form is visible, simulate click on login button
+                        loginButton.click();
+                    } else {
+                        // If options are visible, find the focused option button and trigger its click
+                        const focusedButton = document.activeElement;
+                        if (focusedButton && focusedButton.tagName === 'BUTTON') {
+                            focusedButton.click();
+                        }
+                    }
+                }
+            });
         });
     </script>
 </body>
