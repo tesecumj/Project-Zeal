@@ -26,45 +26,6 @@
 
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const loginButton = document.getElementById('login-btn');
-            const errorMessage = document.getElementById('error-message');
-            const loginForm = document.getElementById('login-form');
-            const options = document.getElementById('options');
-
-            loginButton.addEventListener('click', function() {
-                const username = usernameInput.value;
-                const password = passwordInput.value;
-
-                if (username === 'tesecumj' && password === 'oristech1234') {
-                    // Successful login
-                    loginForm.style.display = 'none';
-                    options.style.display = 'block';
-
-                    // Activate event listeners for option buttons
-                   document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
-document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
-document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
-document.getElementById("exit-btn").addEventListener("click", handleExit);
-                } else {
-                    // Failed login
-                    errorMessage.textContent = 'Invalid username or password';
-                }
-            });
-
-            // Event listener for "Enter" keypress
-            document.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    const activeElement = document.activeElement;
-                    if (activeElement.tagName === 'BUTTON') {
-                        activeElement.click();
-                    }
-                }
-            });
-        });
-
         // Referral Queue System JavaScript
         const agentsData = new Map([
             ["456", "Sheyla Morales"],
@@ -232,9 +193,44 @@ document.getElementById("exit-btn").addEventListener("click", handleExit);
             // Add any necessary clean-up logic here
         }
 
-        // Event listeners for button clicks
-        // These listeners are activated after successful login
-        // See above in the loginButton event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginButton = document.getElementById('login-btn');
+            const errorMessage = document.getElementById('error-message');
+            const loginForm = document.getElementById('login-form');
+            const options = document.getElementById('options');
+
+            loginButton.addEventListener('click', function() {
+                const username = usernameInput.value;
+                const password = passwordInput.value;
+
+                if (username === 'tesecumj' && password === 'oristech1234') {
+                    // Successful login
+                    loginForm.style.display = 'none';
+                    options.style.display = 'block';
+
+                    // Activate event listeners for option buttons
+                    document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
+                    document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
+                    document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
+                    document.getElementById("exit-btn").addEventListener("click", handleExit);
+                } else {
+                    // Failed login
+                    errorMessage.textContent = 'Invalid username or password';
+                }
+            });
+
+            // Event listener for "Enter" keypress
+            document.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    const activeElement = document.activeElement;
+                    if (activeElement.tagName === 'BUTTON') {
+                        activeElement.click();
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
