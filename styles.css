@@ -15,38 +15,11 @@ h1 {
     cursor: pointer;
 }
 
-.output {
+.output, .listers-output, .downloaders-output, .data-entry-output {
     margin-top: 20px;
     text-align: left;
     border: 1px solid #ccc;
     padding: 10px;
     height: 280px; /* Adjust height based on your design */
-    overflow-y: scroll;
-}
-
-.listers-output {
-    margin-top: 20px;
-    text-align: left;
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: 120px; /* Adjust height based on your design */
-    overflow-y: scroll;
-}
-
-.downloaders-output {
-    margin-top: 20px;
-    text-align: left;
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: 120px; /* Adjust height based on your design */
-    overflow-y: scroll;
-}
-
-data-entry-output {
-    margin-top: 20px;
-    text-align: left;
-    border: 1px solid #ccc;
-    padding: 10px;
-    height: 120px; /* Adjust height based on your design */
     overflow-y: scroll;
 }
