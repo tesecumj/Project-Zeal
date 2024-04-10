@@ -16,107 +16,17 @@
             <div class="error-message" id="error-message"></div>
         </div>
         <div class="output" id="output"></div>
+        <div class="listers-output" id="listers-output"></div>
+        <div class="downloaders-output" id="downloaders-output"></div>
+        <div class="data-entry-output" id="data-entry-output"></div>
         <div class="options" id="options" style="display: none;">
-            <button id="guidelines-btn">Guidelines</button>
-            <button id="guidelines-ready-btn">Guidelines Ready</button>
-            <button id="add-options-data-btn">Additional Options Data Entries</button>
-            <button id="data-entry-complete-btn">Data Entry Complete</button>
-            <button id="listers-btn">Listers</button>
-            <button id="listing-complete-btn">Listing Complete</button>
-            <button id="downloaders-btn">Downloaders</button>
-            <button id="download-complete-btn">Download Complete</button>
+            <button id="sign-in-btn">Agent Sign In</button>
+            <button id="agent-ready-btn">Agent Ready</button>
+            <button id="add-referrals-btn">Add Referral(s)</button>
             <button id="exit-btn">Exit</button>
         </div>
     </div>
 
     <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const loginButton = document.getElementById('login-btn');
-            const errorMessage = document.getElementById('error-message');
-            const loginForm = document.getElementById('login-form');
-            const options = document.getElementById('options');
-
-            loginButton.addEventListener('click', function() {
-                const username = usernameInput.value;
-                const password = passwordInput.value;
-
-                if (username === 'tesecumj' && password === 'oristech1234') {
-                    // Successful login
-                    loginForm.style.display = 'none';
-                    options.style.display = 'block';
-
-                    // Activate event listeners for option buttons
-                    document.getElementById("guidelines-btn").addEventListener("click", handleGuidelines);
-                    document.getElementById("guidelines-ready-btn").addEventListener("click", handleGuidelinesReady);
-                    document.getElementById("add-options-data-btn").addEventListener("click", handleAddOptionsData);
-                    document.getElementById("data-entry-complete-btn").addEventListener("click", handleDataEntryComplete);
-                    document.getElementById("listers-btn").addEventListener("click", handleListers);
-                    document.getElementById("listing-complete-btn").addEventListener("click", handleListingComplete);
-                    document.getElementById("downloaders-btn").addEventListener("click", handleDownloaders);
-                    document.getElementById("download-complete-btn").addEventListener("click", handleDownloadComplete);
-                    document.getElementById("exit-btn").addEventListener("click", handleExit);
-                } else {
-                    // Failed login
-                    errorMessage.textContent = 'Invalid username or password';
-                }
-            });
-
-            // Event listener for "Enter" keypress on password input
-            passwordInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    if (loginForm.style.display !== 'none') {
-                        // If login form is visible, simulate click on login button
-                        loginButton.click();
-                    } else {
-                        // If options are visible, find the focused option button and trigger its click
-                        const focusedButton = document.activeElement;
-                        if (focusedButton && focusedButton.tagName === 'BUTTON') {
-                            focusedButton.click();
-                        }
-                    }
-                }
-            });
-        });
-
-        function handleGuidelines() {
-            // Add logic for guidelines here
-        }
-
-        function handleGuidelinesReady() {
-            // Add logic for guidelines ready here
-        }
-
-        function handleAddOptionsData() {
-            // Add logic for additional options data entries here
-        }
-
-        function handleDataEntryComplete() {
-            // Add logic for data entry complete here
-        }
-
-        function handleListers() {
-            // Add logic for listers here
-        }
-
-        function handleListingComplete() {
-            // Add logic for listing complete here
-        }
-
-        function handleDownloaders() {
-            // Add logic for downloaders here
-        }
-
-        function handleDownloadComplete() {
-            // Add logic for download complete here
-        }
-
-        function handleExit() {
-            updateOutput("Exiting program.");
-            // Add any necessary clean-up logic here
-        }
-    </script>
 </body>
 </html>
