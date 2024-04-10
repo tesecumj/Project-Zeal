@@ -42,6 +42,12 @@
                     // Successful login
                     loginForm.style.display = 'none';
                     options.style.display = 'block';
+
+                    // Activate event listeners for option buttons
+                    document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
+                    document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
+                    document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
+                    document.getElementById("exit-btn").addEventListener("click", handleExit);
                 } else {
                     // Failed login
                     errorMessage.textContent = 'Invalid username or password';
@@ -227,10 +233,8 @@
         }
 
         // Event listeners for button clicks
-        document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
-        document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
-        document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
-        document.getElementById("exit-btn").addEventListener("click", handleExit);
+        // These listeners are activated after successful login
+        // See above in the loginButton event listener
     </script>
 </body>
 </html>
