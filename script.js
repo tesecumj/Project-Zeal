@@ -25,74 +25,19 @@ const queue = [];
 const manualReferrals = [];
 let lastMessage = ""; // Variable to store the last message
 
-// Add agents for listers, data entry agents, and downloaders
-const listersIds = ["571", "681", "514", "774", "775", "773", "776", "382", "661", "647", "421", "414", "662", "678", "737", "541", "649"];
-const dataEntryIds = ["785", "769", "768", "766", "786", "770", "771"];
-const downloadersIds = ["393", "395", "318", "454", "042"];
-
-function addAgent(id, name, category) {
+function addAgent(id, name) {
     agents.set(id, {
         id: id,
         name: name,
         ready: false,
         busy: false,
-        referral: null,
-        category: category
+        referral: null
     });
 }
 
-function initializeAgents() {
-    agentsData.forEach((name, id) => {
-        if (listersIds.includes(id)) {
-            addAgent(id, name, "Lister");
-        } else if (dataEntryIds.includes(id)) {
-            addAgent(id, name, "Data Entry");
-        } else if (downloadersIds.includes(id)) {
-            addAgent(id, name, "Downloader");
-        } else {
-            addAgent(id, name, "Guidelines");
-        }
-    });
-}
-
-initializeAgents();
-
-function getOutputDiv(category) {
-    switch (category) {
-        case "Lister":
-            return document.getElementById("listers-output");
-        case "Data Entry":
-            return document.getElementById("data-entry-output");
-        case "Downloader":
-            return document.getElementById("downloaders-output");
-        default:
-            return document.getElementById("output");
-    }
-}
-
-function updateOutput(message, category) {
-    const outputDiv = getOutputDiv(category);
-    const newMessage = document.createElement("div");
-    newMessage.textContent = message;
-
-    // Check if the last message was "No manual referrals available."
-    // If it was, don't add another one
-    if (message !== lastMessage) {
-        outputDiv.appendChild(newMessage);
-        // Add a line break after each message
-        outputDiv.appendChild(document.createElement("br"));
-        // Update lastMessage with the current message
-        lastMessage = message;
-    } else {
-        // Update lastMessage with the current message even if it's repeated
-        lastMessage = message;
-    }
-}
-
-function clearOutput(category) {
-    const outputDiv = getOutputDiv(category);
-    outputDiv.innerHTML = "";
-}
+agentsData.forEach((name, id) => {
+    addAgent(id, name);
+});
 
 function assignReferralToAgent(agent) {
     if (agent.referral === null) {
@@ -100,12 +45,12 @@ function assignReferralToAgent(agent) {
             const referralNumber = manualReferrals.shift();
             agent.referral = referralNumber;
             agent.busy = true;
-            updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, agent.category);
+            updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, "Guidelines");
         } else {
-            updateOutput("No manual referrals available.", agent.category);
+            updateOutput("No manual referrals available.", "Guidelines");
         }
     } else {
-        updateOutput(`${agent.name} (ID: ${agent.id}) already has a referral assigned.`, agent.category);
+        updateOutput(`${agent.name} (ID: ${agent.id}) already has a referral assigned.`, "Guidelines");
     }
 }
 
@@ -116,9 +61,9 @@ function assignReferral() {
                 const referralNumber = manualReferrals.shift();
                 agent.referral = referralNumber;
                 agent.busy = true;
-                updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, agent.category);
+                updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, "Guidelines");
             } else {
-                updateOutput("No manual referrals available.", agent.category);
+                updateOutput("No manual referrals available.", "Guidelines");
             }
         }
     }
@@ -133,10 +78,10 @@ function agentReady(agentId) {
         if (agent.busy) {
             agent.busy = false;
             agent.referral = null;
-            updateOutput(`${agent.name} marked as ready.`, agent.category);
+            updateOutput(`${agent.name} marked as ready.`, "Guidelines");
             assignReferralToAgent(agent);
         } else {
-            updateOutput(`${agent.name} is already ready.`, agent.category);
+            updateOutput(`${agent.name} is already ready.`, "Guidelines");
         }
     } else {
         updateOutput("Agent ID not found.", "Guidelines");
@@ -154,7 +99,47 @@ function addReferrals(referralNumbers, isRush = false) {
     assignReferral();
 }
 
+function updateOutput(message, outputType) {
+    let outputDiv;
+    switch (outputType) {
+        case "Listers":
+            outputDiv = document.getElementById("listers-output");
+            break;
+        case "Data Entry":
+            outputDiv = document.getElementById("data-entry-output");
+            break;
+        case "Downloaders":
+            outputDiv = document.getElementById("downloaders-output");
+            break;
+        default:
+            outputDiv = document.getElementById("guidelines-output");
+            break;
+    }
+    
+    const newMessage = document.createElement("div");
+    newMessage.textContent = message;
+
+    // Check if the last message was "No manual referrals available."
+    // If it was, don't add another one
+    if (message !== lastMessage) {
+        outputDiv.appendChild(newMessage);
+        // Add a line break after each message
+        outputDiv.appendChild(document.createElement("br"));
+        // Update lastMessage with the current message
+        lastMessage = message;
+    } else {
+        // Update lastMessage with the current message even if it's repeated
+        lastMessage = message;
+    }
+}
+
+function clearOutput() {
+    const outputDiv = document.getElementById("guidelines-output");
+    outputDiv.innerHTML = "";
+}
+
 function signIn(agentId) {
+    console.log('Attempting to sign in agent:', agentId);
     if (agents.has(agentId)) {
         const agent = agents.get(agentId);
         if (agent.ready && !agent.busy) {
@@ -163,10 +148,10 @@ function signIn(agentId) {
         } else if (!queue.includes(agent)) {
             queue.push(agent);
             agent.ready = true;
-            updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`, agent.category);
+            updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`, "Guidelines");
             assignReferral();
         } else {
-            updateOutput(`${agent.name} is already in the queue.`, agent.category);
+            updateOutput(`${agent.name} is already in the queue.`, "Guidelines");
         }
     } else {
         updateOutput("Agent ID not found.", "Guidelines");
