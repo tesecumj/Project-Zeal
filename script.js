@@ -207,4 +207,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener for "Enter" keypress
     document.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            const activeElement = document.activeElement
+            const activeElement = document.activeElement;
+            if (activeElement.tagName === 'BUTTON') {
+                activeElement.click();
+            }
+        }
+    });
+});
