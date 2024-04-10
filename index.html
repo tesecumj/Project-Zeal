@@ -3,30 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Queue System - Login</title>
+    <title>Agent System</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Referral Queue System</h1>
-        <div class="login-form" id="login-form">
+        <h1>Welcome to the Agent System</h1>
+        <form id="login-form">
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
-            <button id="login-btn">Login</button>
-            <div class="error-message" id="error-message"></div>
-        </div>
-        <div class="output" id="output"></div>
-        <div class="listers-output" id="listers-output"></div>
-        <div class="data-entry-output" id="data-entry-output"></div>
-        <div class="downloaders-output" id="downloaders-output"></div>
-        <div class="guidelines-output" id="guidelines-output"></div>
-        <div class="options" id="options" style="display: none;">
-            <button id="sign-in-btn">Agent Sign In</button>
-            <button id="agent-ready-btn">Agent Ready</button>
-            <button id="add-referrals-btn">Add Referral(s)</button>
-            <button id="exit-btn">Exit</button>
-        </div>
+            <button type="button" id="login-btn">Login</button>
+        </form>
+        <p id="error-message"></p>
     </div>
+
+    <div id="options" class="container" style="display: none;">
+        <button id="sign-in-btn">Sign In</button>
+        <button id="agent-ready-btn">Mark Agent Ready</button>
+        <button id="add-referrals-btn">Add Referrals</button>
+        <button id="exit-btn">Exit</button>
+    </div>
+
+    <div id="guideline-output" class="output"></div>
+    <div id="lister-output" class="output"></div>
+    <div id="data-entry-output" class="output"></div>
+    <div id="downloader-output" class="output"></div>
 
     <script src="script.js"></script>
 </body>
