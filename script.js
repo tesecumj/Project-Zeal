@@ -15,44 +15,67 @@ const agentsData = new Map([
     ["678", "Dania Arana"],
     ["737", "Kerstie Samos"],
     ["541", "Marialuz Polanco"],
-    ["649", "Tammy Bacab"]
+    ["649", "Tammy Bacab"],
+    ["785", "Carlene Jones"],
+    ["769", "Breanna Reyes"],
+    ["768", "Brandy James"],
+    ["766", "Alinie Cruz"],
+    ["786", "Lizannie Patt"],
+    ["770", "Mariangel Santos"],
+    ["771", "Zenelly Guerra"],
+    ["393", "Aura Tzib"],
+    ["395", "Charles Harrison"],
+    ["318", "Edgardo Serrut"],
+    ["454", "Adolfo Medina"],
+    ["042", "Ernesto Orellana"],
+    ["456", "Sheyla Morales"],
+    ["111", "Mirian Gonzales"],
+    ["385", "Brithney Howe"],
+    ["633", "Jessica Rivera"],
+    ["380", "Lucia Tesecum"],
+    ["631", "Jenaa Nicholas"],
+    ["718", "Adriannie Novelo"],
+    ["562", "Alexus Kotch"],
+    ["503", "Catherine Camal"],
+    ["638", "Erika Tzib"],
+    ["536", "Enrisen Tzib"],
+    ["745", "Leila Escobar"],
+    ["639", "Jacqueline Pott"],
+    ["067", "Maria Yacab"],
+    ["637", "Hienifer Rodriguez"],
+    ["635", "Hector Montero"],
+    ["624", "Janice Hernandez"],
+    ["567", "Jorge Tesecum"],
+    ["626", "Ginelly Rivera"]
 ]);
-
-const listersIds = ["571", "681", "514", "774", "775", "773", "776", "382", "661", "647", "421", "414", "662", "678", "737", "541", "649"];
-
-const dataEntryIds = ["785", "769", "768", "766", "786", "770", "771"];
-
-const downloadersIds = ["393", "395", "318", "454", "042"];
 
 const agents = new Map();
 const queue = [];
 const manualReferrals = [];
 let lastMessage = ""; // Variable to store the last message
 
-function addAgent(id, name, category) {
+function addAgent(id, name, type) {
     agents.set(id, {
         id: id,
         name: name,
+        type: type,
         ready: false,
         busy: false,
-        referral: null,
-        category: category
+        referral: null
     });
 }
 
-// Initialize agents
+// Adding listers
 agentsData.forEach((name, id) => {
-    let category = "";
-    if (listersIds.includes(id)) {
-        category = "Listers";
-    } else if (dataEntryIds.includes(id)) {
-        category = "Data Entry";
-    } else if (downloadersIds.includes(id)) {
-        category = "Downloaders";
+    if (id === "571" || id === "681" || id === "514" || id === "774" || id === "775" || id === "773" || id === "776" || id === "382" || id === "661" || id === "647" || id === "421" || id === "414" || id === "662" || id === "678" || id === "737" || id === "541" || id === "649") {
+        addAgent(id, name, "Lister");
+    } else if (id === "785" || id === "769" || id === "768" || id === "766" || id === "786" || id === "770" || id === "771") {
+        addAgent(id, name, "Data Entry");
+    } else if (id === "393" || id === "395" || id === "318" || id === "454" || id === "042") {
+        addAgent(id, name, "Downloader");
     } else {
-        category = "Guideline Agents";
+        addAgent(id, name, "Guideline");
     }
-    addAgent(id, name, category);
 });
 
 function assignReferralToAgent(agent) {
@@ -61,12 +84,12 @@ function assignReferralToAgent(agent) {
             const referralNumber = manualReferrals.shift();
             agent.referral = referralNumber;
             agent.busy = true;
-            updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, agent.category);
+            updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`);
         } else {
-            updateOutput("No manual referrals available.", agent.category);
+            updateOutput("No manual referrals available.");
         }
     } else {
-        updateOutput(`${agent.name} (ID: ${agent.id}) already has a referral assigned.`, agent.category);
+        updateOutput(`${agent.name} (ID: ${agent.id}) already has a referral assigned.`);
     }
 }
 
@@ -77,14 +100,14 @@ function assignReferral() {
                 const referralNumber = manualReferrals.shift();
                 agent.referral = referralNumber;
                 agent.busy = true;
-                updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, agent.category);
+                updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`);
             } else {
-                updateOutput("No manual referrals available.", agent.category);
+                updateOutput("No manual referrals available.");
             }
         }
     }
     if (!queue.some(agent => agent.ready && !agent.busy)) {
-        updateOutput("No agents available in the queue to process remaining referrals. They will be assigned to the next available agent.", "Guideline Agents");
+        updateOutput("No agents available in the queue to process remaining referrals. They will be assigned to the next available agent.");
     }
 }
 
@@ -94,13 +117,13 @@ function agentReady(agentId) {
         if (agent.busy) {
             agent.busy = false;
             agent.referral = null;
-            updateOutput(`${agent.name} marked as ready.`, agent.category);
+            updateOutput(`${agent.name} marked as ready.`);
             assignReferralToAgent(agent);
         } else {
-            updateOutput(`${agent.name} is already ready.`, agent.category);
+            updateOutput(`${agent.name} is already ready.`);
         }
     } else {
-        updateOutput("Agent ID not found.", "Guideline Agents");
+        updateOutput("Agent ID not found.");
     }
 }
 
@@ -111,12 +134,12 @@ function addReferrals(referralNumbers, isRush = false) {
     } else {
         manualReferrals.push(...referralNumbers);
     }
-    updateOutput("Referrals added.", "Guideline Agents");
+    updateOutput("Referrals added.");
     assignReferral();
 }
 
-function updateOutput(message, category) {
-    const outputDiv = document.getElementById(`${category.toLowerCase().replace(" ", "-")}-output`);
+function updateOutput(message) {
+    const outputDiv = document.getElementById("output");
     const newMessage = document.createElement("div");
     newMessage.textContent = message;
 
@@ -134,8 +157,8 @@ function updateOutput(message, category) {
     }
 }
 
-function clearOutput(category) {
-    const outputDiv = document.getElementById(`${category.toLowerCase().replace(" ", "-")}-output`);
+function clearOutput() {
+    const outputDiv = document.getElementById("output");
     outputDiv.innerHTML = "";
 }
 
@@ -148,85 +171,5 @@ function signIn(agentId) {
         } else if (!queue.includes(agent)) {
             queue.push(agent);
             agent.ready = true;
-            updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`, agent.category);
+            updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`);
             assignReferral();
-        } else {
-            updateOutput(`${agent.name} is already in the queue.`, agent.category);
-        }
-    } else {
-        updateOutput("Agent ID not found.", "Guideline Agents");
-    }
-}
-
-function handleSignIn() {
-    const agentId = prompt("Enter agent ID:");
-    if (agentId !== null) {
-        signIn(agentId);
-    }
-}
-
-function handleAgentReady() {
-    const agentId = prompt("Enter agent ID:");
-    if (agentId !== null) {
-        agentReady(agentId);
-    }
-}
-
-function handleAddReferrals() {
-    const referralType = prompt("Enter referral type (RUSH or MANUAL):");
-    if (referralType !== null) {
-        const referralNumbersInput = prompt("Enter referral number(s) separated by commas:");
-        if (referralNumbersInput !== null) {
-            const referralNumbers = referralNumbersInput.split(",").map(referral => parseInt(referral.trim()));
-            if (referralType.toUpperCase() === "RUSH") {
-                addReferrals(referralNumbers, true); // Pass true for rush referrals
-            } else {
-                addReferrals(referralNumbers);
-            }
-        }
-    }
-}
-
-function handleExit() {
-    updateOutput("Exiting program.", "Guideline Agents");
-    // Add any necessary clean-up logic here
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    const loginButton = document.getElementById('login-btn');
-    const errorMessage = document.getElementById('error-message');
-    const loginForm = document.getElementById('login-form');
-    const options = document.getElementById('options');
-
-    loginButton.addEventListener('click', function() {
-        const username = usernameInput.value;
-        const password = passwordInput.value;
-
-        if (username === 'tesecumj' && password === 'oristech1234') {
-            // Successful login
-            loginForm.style.display = 'none';
-            options.style.display = 'block';
-
-            // Activate event listeners for option buttons
-            document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
-            document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
-            document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
-            document.getElementById("exit-btn").addEventListener("click", handleExit);
-        } else {
-            // Failed login
-            errorMessage.textContent = 'Invalid username or password';
-        }
-    });
-
-    // Event listener for "Enter" keypress
-    document.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            const activeElement = document.activeElement;
-            if (activeElement.tagName === 'BUTTON') {
-                activeElement.click();
-            }
-        }
-    });
-});
