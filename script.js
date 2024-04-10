@@ -76,6 +76,7 @@
         const agents = new Map();
         const queue = [];
         const manualReferrals = [];
+        let lastMessage = ""; // Variable to store the last message
 
         function addAgent(id, name) {
             agents.set(id, {
@@ -150,9 +151,19 @@
             const outputDiv = document.getElementById("output");
             const newMessage = document.createElement("div");
             newMessage.textContent = message;
-            outputDiv.appendChild(newMessage);
-            // Add a line break after each message
-            outputDiv.appendChild(document.createElement("br"));
+
+            // Check if the last message was "No manual referrals available."
+            // If it was, don't add another one
+            if (message !== lastMessage) {
+                outputDiv.appendChild(newMessage);
+                // Add a line break after each message
+                outputDiv.appendChild(document.createElement("br"));
+                // Update lastMessage with the current message
+                lastMessage = message;
+            } else {
+                // Update lastMessage with the current message even if it's repeated
+                lastMessage = message;
+            }
         }
 
         function clearOutput() {
