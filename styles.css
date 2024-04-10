@@ -15,11 +15,15 @@ h1 {
     cursor: pointer;
 }
 
-.output, .listers-output, .downloaders-output, .data-entry-output {
+.output {
     margin-top: 20px;
     text-align: left;
     border: 1px solid #ccc;
     padding: 10px;
-    height: 280px; /* Adjust height based on your design */
+    height: 200px; /* Adjust height as needed */
     overflow-y: scroll;
+}
+
+.output h2 {
+    margin-bottom: 10px;
 }
