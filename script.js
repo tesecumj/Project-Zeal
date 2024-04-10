@@ -25,6 +25,7 @@ const queue = [];
 const manualReferrals = [];
 let lastMessage = ""; // Variable to store the last message
 
+// Add agents to the agents map
 function addAgent(id, name) {
     agents.set(id, {
         id: id,
@@ -35,25 +36,28 @@ function addAgent(id, name) {
     });
 }
 
+// Initialize agents map with data from agentsData
 agentsData.forEach((name, id) => {
     addAgent(id, name);
 });
 
+// Assign a referral to a specific agent
 function assignReferralToAgent(agent) {
     if (agent.referral === null) {
         if (manualReferrals.length > 0) {
             const referralNumber = manualReferrals.shift();
             agent.referral = referralNumber;
             agent.busy = true;
-            updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, "Guidelines");
+            updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, "Listers"); // Updated to output to Listers
         } else {
-            updateOutput("No manual referrals available.", "Guidelines");
+            updateOutput("No manual referrals available.", "Listers"); // Updated to output to Listers
         }
     } else {
-        updateOutput(`${agent.name} (ID: ${agent.id}) already has a referral assigned.`, "Guidelines");
+        updateOutput(`${agent.name} (ID: ${agent.id}) already has a referral assigned.`, "Listers"); // Updated to output to Listers
     }
 }
 
+// Assign referrals to agents in the queue
 function assignReferral() {
     for (const agent of queue) {
         if (agent.ready && !agent.busy) {
@@ -61,33 +65,35 @@ function assignReferral() {
                 const referralNumber = manualReferrals.shift();
                 agent.referral = referralNumber;
                 agent.busy = true;
-                updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, "Guidelines");
+                updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, "Listers"); // Updated to output to Listers
             } else {
-                updateOutput("No manual referrals available.", "Guidelines");
+                updateOutput("No manual referrals available.", "Listers"); // Updated to output to Listers
             }
         }
     }
     if (!queue.some(agent => agent.ready && !agent.busy)) {
-        updateOutput("No agents available in the queue to process remaining referrals. They will be assigned to the next available agent.", "Guidelines");
+        updateOutput("No agents available in the queue to process remaining referrals. They will be assigned to the next available agent.", "Listers"); // Updated to output to Listers
     }
 }
 
+// Mark an agent as ready
 function agentReady(agentId) {
     const agent = agents.get(agentId);
     if (agent) {
         if (agent.busy) {
             agent.busy = false;
             agent.referral = null;
-            updateOutput(`${agent.name} marked as ready.`, "Guidelines");
+            updateOutput(`${agent.name} marked as ready.`, "Listers"); // Updated to output to Listers
             assignReferralToAgent(agent);
         } else {
-            updateOutput(`${agent.name} is already ready.`, "Guidelines");
+            updateOutput(`${agent.name} is already ready.`, "Listers"); // Updated to output to Listers
         }
     } else {
-        updateOutput("Agent ID not found.", "Guidelines");
+        updateOutput("Agent ID not found.", "Listers"); // Updated to output to Listers
     }
 }
 
+// Add manual referrals to the queue
 function addReferrals(referralNumbers, isRush = false) {
     if (isRush) {
         // Add rush referrals to the beginning of the queue
@@ -95,28 +101,13 @@ function addReferrals(referralNumbers, isRush = false) {
     } else {
         manualReferrals.push(...referralNumbers);
     }
-    updateOutput("Referrals added.", "Guidelines");
+    updateOutput("Referrals added.", "Listers"); // Updated to output to Listers
     assignReferral();
 }
 
+// Update the output for a specific agent type
 function updateOutput(message, outputType) {
-    let outputDiv;
-    switch (outputType) {
-        case "Listers":
-            outputDiv = document.getElementById("listers-output");
-            break;
-        case "Data Entry":
-            outputDiv = document.getElementById("data-entry-output");
-            break;
-        case "Downloaders":
-            outputDiv = document.getElementById("downloaders-output");
-            break;
-        default:
-            outputDiv = document.getElementById("guidelines-output");
-            break;
-    }
-
-    // Check if outputDiv is null before attempting to append
+    const outputDiv = document.getElementById(`${outputType.toLowerCase()}-output`);
     if (outputDiv) {
         const newMessage = document.createElement("div");
         newMessage.textContent = message;
@@ -138,11 +129,17 @@ function updateOutput(message, outputType) {
     }
 }
 
-function clearOutput() {
-    const outputDiv = document.getElementById("guidelines-output");
-    outputDiv.innerHTML = "";
+// Clear the output for a specific agent type
+function clearOutput(outputType) {
+    const outputDiv = document.getElementById(`${outputType.toLowerCase()}-output`);
+    if (outputDiv) {
+        outputDiv.innerHTML = "";
+    } else {
+        console.error("Output element not found:", outputType);
+    }
 }
 
+// Sign in an agent and mark them as ready
 function signIn(agentId) {
     if (agents.has(agentId)) {
         const agent = agents.get(agentId);
@@ -152,16 +149,17 @@ function signIn(agentId) {
         } else if (!queue.includes(agent)) {
             queue.push(agent);
             agent.ready = true;
-            updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`, "Guidelines");
+            updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`, "Listers"); // Updated to output to Listers
             assignReferral();
         } else {
-            updateOutput(`${agent.name} is already in the queue.`, "Guidelines");
+            updateOutput(`${agent.name} is already in the queue.`, "Listers"); // Updated to output to Listers
         }
     } else {
-        updateOutput("Agent ID not found.", "Guidelines");
+        updateOutput("Agent ID not found.", "Listers"); // Updated to output to Listers
     }
 }
 
+// Event handler for signing in an agent
 function handleSignIn() {
     const agentId = prompt("Enter agent ID:");
     if (agentId !== null) {
@@ -169,6 +167,7 @@ function handleSignIn() {
     }
 }
 
+// Event handler for marking an agent as ready
 function handleAgentReady() {
     const agentId = prompt("Enter agent ID:");
     if (agentId !== null) {
@@ -176,6 +175,7 @@ function handleAgentReady() {
     }
 }
 
+// Event handler for adding referrals
 function handleAddReferrals() {
     const referralType = prompt("Enter referral type (RUSH or MANUAL):");
     if (referralType !== null) {
@@ -191,26 +191,25 @@ function handleAddReferrals() {
     }
 }
 
+// Event handler for exiting the program
 function handleExit() {
-    updateOutput("Exiting program.", "Guidelines");
+    updateOutput("Exiting program.", "Listers"); // Updated to output to Listers
     // Add any necessary clean-up logic here
 }
 
+// Initialize the event listeners when the DOM content is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
+    // Event listeners for login and option buttons
     const loginButton = document.getElementById('login-btn');
-    const errorMessage = document.getElementById('error-message');
-    const loginForm = document.getElementById('login-form');
     const options = document.getElementById('options');
 
     loginButton.addEventListener('click', function() {
-        const username = usernameInput.value;
-        const password = passwordInput.value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
         if (username === 'tesecumj' && password === 'oristech1234') {
             // Successful login
-            loginForm.style.display = 'none';
+            document.getElementById('login-form').style.display = 'none';
             options.style.display = 'block';
 
             // Activate event listeners for option buttons
@@ -220,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("exit-btn").addEventListener("click", handleExit);
         } else {
             // Failed login
-            errorMessage.textContent = 'Invalid username or password';
+            document.getElementById('error-message').textContent = 'Invalid username or password';
         }
     });
 
