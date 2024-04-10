@@ -1,5 +1,4 @@
 const agentsData = new Map([
-    // Existing agents
     ["456", "Sheyla Morales"],
     ["111", "Mirian Gonzales"],
     ["385", "Brithney Howe"],
@@ -18,45 +17,18 @@ const agentsData = new Map([
     ["635", "Hector Montero"],
     ["624", "Janice Hernandez"],
     ["567", "Jorge Tesecum"],
-    ["626", "Ginelly Rivera"],
-    // New listers
-    ["571", "Joeanna Pech"],
-    ["681", "Daja Flowers"],
-    ["514", "Emilia Cunil"],
-    ["774", "Hailey Perez"],
-    ["775", "Emily Sanchez"],
-    ["773", "Vinaya Martinez"],
-    ["776", "Joshua Reyes"],
-    ["382", "Adriel Pech"],
-    ["661", "Jamina Quiroz"],
-    ["647", "Bianka Aranda"],
-    ["421", "Dylan Gentle"],
-    ["414", "Melissa Ferguson"],
-    ["662", "Julianna Moreno"],
-    ["678", "Dania Arana"],
-    ["737", "Kerstie Samos"],
-    ["541", "Marialuz Polanco"],
-    ["649", "Tammy Bacab"],
-    // New data entry agents
-    ["785", "Carlene Jones"],
-    ["769", "Breanna Reyes"],
-    ["768", "Brandy James"],
-    ["766", "Alinie Cruz"],
-    ["786", "Lizannie Patt"],
-    ["770", "Mariangel Santos"],
-    ["771", "Zenelly Guerra"],
-    // New downloaders
-    ["393", "Aura Tzib"],
-    ["395", "Charles Harrison"],
-    ["318", "Edgardo Serrut"],
-    ["454", "Adolfo Medina"],
-    ["042", "Ernesto Orellana"]
+    ["626", "Ginelly Rivera"]
 ]);
 
 const agents = new Map();
 const queue = [];
 const manualReferrals = [];
 let lastMessage = ""; // Variable to store the last message
+
+// Add agents for listers, data entry agents, and downloaders
+const listersIds = ["571", "681", "514", "774", "775", "773", "776", "382", "661", "647", "421", "414", "662", "678", "737", "541", "649"];
+const dataEntryIds = ["785", "769", "768", "766", "786", "770", "771"];
+const downloadersIds = ["393", "395", "318", "454", "042"];
 
 function addAgent(id, name, category) {
     agents.set(id, {
@@ -65,87 +37,41 @@ function addAgent(id, name, category) {
         ready: false,
         busy: false,
         referral: null,
-        category: category // Add category property
+        category: category
     });
 }
 
-agentsData.forEach((name, id) => {
-    // Determine category based on agent ID
-    let category;
-    if (id.startsWith("5")) {
-        category = "Lister";
-    } else if (id.startsWith("7")) {
-        category = "Data Entry";
-    } else if (id.startsWith("3")) {
-        category = "Downloader";
-    } else {
-        category = "Guidelines"; // Assuming guidelines agents have IDs starting with other digits
-    }
-    addAgent(id, name, category);
-});
-
-function assignReferralToAgent(agent) {
-    if (agent.referral === null) {
-        if (manualReferrals.length > 0) {
-            const referralNumber = manualReferrals.shift();
-            agent.referral = referralNumber;
-            agent.busy = true;
-            updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`);
+function initializeAgents() {
+    agentsData.forEach((name, id) => {
+        if (listersIds.includes(id)) {
+            addAgent(id, name, "Lister");
+        } else if (dataEntryIds.includes(id)) {
+            addAgent(id, name, "Data Entry");
+        } else if (downloadersIds.includes(id)) {
+            addAgent(id, name, "Downloader");
         } else {
-            updateOutput("No manual referrals available.");
+            addAgent(id, name, "Guidelines");
         }
-    } else {
-        updateOutput(`${agent.name} (ID: ${agent.id}) already has a referral assigned.`);
+    });
+}
+
+initializeAgents();
+
+function getOutputDiv(category) {
+    switch (category) {
+        case "Lister":
+            return document.getElementById("listers-output");
+        case "Data Entry":
+            return document.getElementById("data-entry-output");
+        case "Downloader":
+            return document.getElementById("downloaders-output");
+        default:
+            return document.getElementById("output");
     }
 }
 
-function assignReferral() {
-    for (const agent of queue) {
-        if (agent.ready && !agent.busy) {
-            if (manualReferrals.length > 0) {
-                const referralNumber = manualReferrals.shift();
-                agent.referral = referralNumber;
-                agent.busy = true;
-                updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`);
-            } else {
-                updateOutput("No manual referrals available.");
-            }
-        }
-    }
-    if (!queue.some(agent => agent.ready && !agent.busy)) {
-        updateOutput("No agents available in the queue to process remaining referrals. They will be assigned to the next available agent.");
-    }
-}
-
-function agentReady(agentId) {
-    const agent = agents.get(agentId);
-    if (agent) {
-        if (agent.busy) {
-            agent.busy = false;
-            agent.referral = null;
-            updateOutput(`${agent.name} marked as ready.`);
-            assignReferralToAgent(agent);
-        } else {
-            updateOutput(`${agent.name} is already ready.`);
-        }
-    } else {
-        updateOutput("Agent ID not found.");
-    }
-}
-
-function addReferrals(referralNumbers, isRush = false) {
-    if (isRush) {
-        // Add rush referrals to the beginning of the queue
-        manualReferrals.unshift(...referralNumbers);
-    } else {
-        manualReferrals.push(...referralNumbers);
-    }
-    updateOutput("Referrals added.");
-    assignReferral();
-}
-
-function updateOutput(message) {
-    const outputDiv = document.getElementById("output");
+function updateOutput(message, category) {
+    const outputDiv = getOutputDiv(category);
     const newMessage = document.createElement("div");
     newMessage.textContent = message;
 
@@ -163,9 +89,69 @@ function updateOutput(message) {
     }
 }
 
-function clearOutput() {
-    const outputDiv = document.getElementById("output");
+function clearOutput(category) {
+    const outputDiv = getOutputDiv(category);
     outputDiv.innerHTML = "";
+}
+
+function assignReferralToAgent(agent) {
+    if (agent.referral === null) {
+        if (manualReferrals.length > 0) {
+            const referralNumber = manualReferrals.shift();
+            agent.referral = referralNumber;
+            agent.busy = true;
+            updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, agent.category);
+        } else {
+            updateOutput("No manual referrals available.", agent.category);
+        }
+    } else {
+        updateOutput(`${agent.name} (ID: ${agent.id}) already has a referral assigned.`, agent.category);
+    }
+}
+
+function assignReferral() {
+    for (const agent of queue) {
+        if (agent.ready && !agent.busy) {
+            if (manualReferrals.length > 0) {
+                const referralNumber = manualReferrals.shift();
+                agent.referral = referralNumber;
+                agent.busy = true;
+                updateOutput(`Referral ${referralNumber} assigned to ${agent.name} (ID: ${agent.id}).`, agent.category);
+            } else {
+                updateOutput("No manual referrals available.", agent.category);
+            }
+        }
+    }
+    if (!queue.some(agent => agent.ready && !agent.busy)) {
+        updateOutput("No agents available in the queue to process remaining referrals. They will be assigned to the next available agent.", "Guidelines");
+    }
+}
+
+function agentReady(agentId) {
+    const agent = agents.get(agentId);
+    if (agent) {
+        if (agent.busy) {
+            agent.busy = false;
+            agent.referral = null;
+            updateOutput(`${agent.name} marked as ready.`, agent.category);
+            assignReferralToAgent(agent);
+        } else {
+            updateOutput(`${agent.name} is already ready.`, agent.category);
+        }
+    } else {
+        updateOutput("Agent ID not found.", "Guidelines");
+    }
+}
+
+function addReferrals(referralNumbers, isRush = false) {
+    if (isRush) {
+        // Add rush referrals to the beginning of the queue
+        manualReferrals.unshift(...referralNumbers);
+    } else {
+        manualReferrals.push(...referralNumbers);
+    }
+    updateOutput("Referrals added.", "Guidelines");
+    assignReferral();
 }
 
 function signIn(agentId) {
@@ -177,13 +163,13 @@ function signIn(agentId) {
         } else if (!queue.includes(agent)) {
             queue.push(agent);
             agent.ready = true;
-            updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`);
+            updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`, agent.category);
             assignReferral();
         } else {
-            updateOutput(`${agent.name} is already in the queue.`);
+            updateOutput(`${agent.name} is already in the queue.`, agent.category);
         }
     } else {
-        updateOutput("Agent ID not found.");
+        updateOutput("Agent ID not found.", "Guidelines");
     }
 }
 
@@ -217,7 +203,7 @@ function handleAddReferrals() {
 }
 
 function handleExit() {
-    updateOutput("Exiting program.");
+    updateOutput("Exiting program.", "Guidelines");
     // Add any necessary clean-up logic here
 }
 
