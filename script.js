@@ -44,10 +44,10 @@
                     options.style.display = 'block';
 
                     // Activate event listeners for option buttons
-                    document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
-                    document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
-                    document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
-                    document.getElementById("exit-btn").addEventListener("click", handleExit);
+                   document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
+document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
+document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
+document.getElementById("exit-btn").addEventListener("click", handleExit);
                 } else {
                     // Failed login
                     errorMessage.textContent = 'Invalid username or password';
