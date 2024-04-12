@@ -17,32 +17,9 @@ h1 {
 
 .output {
     margin-top: 20px;
+    text-align: left;
     border: 1px solid #ccc;
     padding: 10px;
-    height: 200px; /* Adjust height as needed */
+    height: 200px;
     overflow-y: scroll;
-}
-
-/* Style for guideline agents output */
-#guideline-output {
-    background-color: #f0f0f0;
-    margin-bottom: 10px;
-}
-
-/* Style for listers output */
-#lister-output {
-    background-color: #e0e0e0;
-    margin-bottom: 10px;
-}
-
-/* Style for data entry agents output */
-#data-entry-output {
-    background-color: #d0d0d0;
-    margin-bottom: 10px;
-}
-
-/* Style for downloaders output */
-#downloader-output {
-    background-color: #c0c0c0;
-    margin-bottom: 10px;
 }
