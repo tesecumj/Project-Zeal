@@ -1,33 +1,4 @@
 const agentsData = new Map([
-    ["571", "Joeanna Pech"],
-    ["681", "Daja Flowers"],
-    ["514", "Emilia Cunil"],
-    ["774", "Hailey Perez"],
-    ["775", "Emily Sanchez"],
-    ["773", "Vinaya Martinez"],
-    ["776", "Joshua Reyes"],
-    ["382", "Adriel Pech"],
-    ["661", "Jamina Quiroz"],
-    ["647", "Bianka Aranda"],
-    ["421", "Dylan Gentle"],
-    ["414", "Melissa Ferguson"],
-    ["662", "Julianna Moreno"],
-    ["678", "Dania Arana"],
-    ["737", "Kerstie Samos"],
-    ["541", "Marialuz Polanco"],
-    ["649", "Tammy Bacab"],
-    ["785", "Carlene Jones"],
-    ["769", "Breanna Reyes"],
-    ["768", "Brandy James"],
-    ["766", "Alinie Cruz"],
-    ["786", "Lizannie Patt"],
-    ["770", "Mariangel Santos"],
-    ["771", "Zenelly Guerra"],
-    ["393", "Aura Tzib"],
-    ["395", "Charles Harrison"],
-    ["318", "Edgardo Serrut"],
-    ["454", "Adolfo Medina"],
-    ["042", "Ernesto Orellana"],
     ["456", "Sheyla Morales"],
     ["111", "Mirian Gonzales"],
     ["385", "Brithney Howe"],
@@ -52,30 +23,19 @@ const agentsData = new Map([
 const agents = new Map();
 const queue = [];
 const manualReferrals = [];
-let lastMessage = ""; // Variable to store the last message
 
-function addAgent(id, name, type) {
+function addAgent(id, name) {
     agents.set(id, {
         id: id,
         name: name,
-        type: type,
         ready: false,
         busy: false,
         referral: null
     });
 }
 
-// Adding listers
 agentsData.forEach((name, id) => {
-    if (id === "571" || id === "681" || id === "514" || id === "774" || id === "775" || id === "773" || id === "776" || id === "382" || id === "661" || id === "647" || id === "421" || id === "414" || id === "662" || id === "678" || id === "737" || id === "541" || id === "649") {
-        addAgent(id, name, "Lister");
-    } else if (id === "785" || id === "769" || id === "768" || id === "766" || id === "786" || id === "770" || id === "771") {
-        addAgent(id, name, "Data Entry");
-    } else if (id === "393" || id === "395" || id === "318" || id === "454" || id === "042") {
-        addAgent(id, name, "Downloader");
-    } else {
-        addAgent(id, name, "Guideline");
-    }
+    addAgent(id, name);
 });
 
 function assignReferralToAgent(agent) {
@@ -127,13 +87,8 @@ function agentReady(agentId) {
     }
 }
 
-function addReferrals(referralNumbers, isRush = false) {
-    if (isRush) {
-        // Add rush referrals to the beginning of the queue
-        manualReferrals.unshift(...referralNumbers);
-    } else {
-        manualReferrals.push(...referralNumbers);
-    }
+function addReferrals(referralNumbers) {
+    manualReferrals.push(...referralNumbers);
     updateOutput("Referrals added.");
     assignReferral();
 }
@@ -142,19 +97,7 @@ function updateOutput(message) {
     const outputDiv = document.getElementById("output");
     const newMessage = document.createElement("div");
     newMessage.textContent = message;
-
-    // Check if the last message was "No manual referrals available."
-    // If it was, don't add another one
-    if (message !== lastMessage) {
-        outputDiv.appendChild(newMessage);
-        // Add a line break after each message
-        outputDiv.appendChild(document.createElement("br"));
-        // Update lastMessage with the current message
-        lastMessage = message;
-    } else {
-        // Update lastMessage with the current message even if it's repeated
-        lastMessage = message;
-    }
+    outputDiv.appendChild(newMessage);
 }
 
 function clearOutput() {
@@ -173,3 +116,43 @@ function signIn(agentId) {
             agent.ready = true;
             updateOutput(`${agent.name} signed into the queue and is ready to receive referrals.`);
             assignReferral();
+        } else {
+            updateOutput(`${agent.name} is already in the queue.`);
+        }
+    } else {
+        updateOutput("Agent ID not found.");
+    }
+}
+
+function handleSignIn() {
+    const agentId = prompt("Enter agent ID:");
+    if (agentId !== null) {
+        signIn(agentId);
+    }
+}
+
+function handleAgentReady() {
+    const agentId = prompt("Enter agent ID:");
+    if (agentId !== null) {
+        agentReady(agentId);
+    }
+}
+
+function handleAddReferrals() {
+    const referralsInput = prompt("Enter referral number(s) separated by commas:");
+    if (referralsInput !== null) {
+        const referrals = referralsInput.split(",").map(referral => parseInt(referral.trim()));
+        addReferrals(referrals);
+    }
+}
+
+function handleExit() {
+    updateOutput("Exiting program.");
+    // Add any necessary clean-up logic here
+}
+
+// Event listeners for button clicks
+document.getElementById("sign-in-btn").addEventListener("click", handleSignIn);
+document.getElementById("agent-ready-btn").addEventListener("click", handleAgentReady);
+document.getElementById("add-referrals-btn").addEventListener("click", handleAddReferrals);
+document.getElementById("exit-btn").addEventListener("click", handleExit);
