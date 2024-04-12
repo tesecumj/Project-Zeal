@@ -1,49 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent System</title>
+    <title>Referral Queue System</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div class="container">
-        <h1>Welcome to the Agent System</h1>
-        <form id="login-form">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
-            <button type="button" id="login-btn">Login</button>
-            <p id="error-message"></p>
-        </form>
-        <div id="options" style="display: none;">
-            <button type="button" id="sign-in-btn">Sign In</button>
-            <button type="button" id="agent-ready-btn">Agent Ready</button>
-            <button type="button" id="add-referrals-btn">Add Referrals</button>
-            <button type="button" id="exit-btn">Exit</button>
-        </div>
-        <div class="output-container">
-            <h2>Listers Output</h2>
-            <div id="listers-output" class="output"></div>
-        </div>
-        <div class="output-container">
-            <h2>Data Entry Output</h2>
-            <div id="data-entry-output" class="output"></div>
-        </div>
-        <div class="output-container">
-            <h2>Downloaders Output</h2>
-            <div id="downloaders-output" class="output"></div>
-        </div>
-        <div class="output-container">
-            <h2>Guideline Agents Output</h2>
-            <div id="guideline-agents-output" class="output"></div>
+        <h1>Referral Queue System</h1>
+        <div class="output" id="output"></div>
+        <div class="options">
+            <button id="sign-in-btn">Agent Sign In</button>
+            <button id="agent-ready-btn">Agent Ready</button>
+            <button id="add-referrals-btn">Add Referral(s)</button>
+            <button id="exit-btn">Exit</button>
         </div>
     </div>
 
     <script src="script.js"></script>
 </body>
-
 </html>
